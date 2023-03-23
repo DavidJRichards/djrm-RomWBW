@@ -5,7 +5,8 @@ Version 3.2 \
 Wayne Warthen  ([wwarthen@gmail.com](mailto:wwarthen@gmail.com)) \
 18 Mar 2023
 
-*** fork including T6963 LCD console driver CLCD ***
+** fork including T6963 LCD console driver CLCD ** \
+more information and CLCD test program [clcdtest](./Source/Apps/Test/T6963/README.MD)
 
 # Overview
 

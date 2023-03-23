@@ -21,7 +21,7 @@ DP 		.EQU 00H 		; DATA PORT
 TL1             .EQU 108H
 TL2             .EQU 18cH
 TL3             .EQU 1ccH
-TSPOS           .EQU 058H             ; abs top left position of splash message 
+TSPOS           .EQU 022H             ; abs top left position of splash message 
 
 LCD_XWIDTH      .EQU 240
 LCD_YHEIGHT     .EQU 128
@@ -658,37 +658,44 @@ T6963_POS:      				;
 ; STARTING AT THE CURRENT FRAME BUFFER POSITION
 ;   A: FILL CHARACTER
 ;   DE: NUMBER OF CHARACTERS TO FILL
-; ** todo ** just clears text screen at present
+
 T6963_FILL
-; 
-;   WRITE TEXT BLANK CODE 
-; 
-		LD HL, _TH  		; SET Address Pointer 0000H 
-		CALL DT2  		; (TEXT HOME ADDRESS) 
-		LD A, ADPSET 
-		CALL CMD 
 
-		LD A, AWRON  		; SET DATA AUTO WRITE
-		CALL CMD  		; 
+                push bc
+                push hl
+                push ix
+                push iy
 
-		LD BC, 400H  		; 64 (40 visible) Columns × 16 Lines = 400H (640 = 280H) 
-TXCR: 
-		LD A, 00H  		; WRITE DATA 00H 
-		CALL ADT  		; (WRITE BLANK CODE) 
+		push de
+;		ld a, 02eh
+                SUB 	32          ; from ascii to lcd
+		ld e, a
+		pop bc                  ; count
+
+TXFL2: 		ld a,e
+;		call T6963_PUTC ;_RAW
+;                SUB 	32          ; from ascii to lcd
+                CALL 	DT1                
+                LD A, 	DATAWR    	; write character
+                CALL    CMD
 
 		DEC BC 
 		LD A, B 
 		OR C 
-		JR NZ, TXCR 
+		JR NZ, TXFL2 
 
-		LD A, AWROFF  		; AUTO RESET 
-		CALL CMD 
+                pop iy
+                pop ix
+                pop hl
+                pop bc
 		RET
 
 
 
 T6963_CLEAR:		; clear text and graphics screens, home cursor	
-		CALL	T6963_FILL
+		ld	de, 0400H
+		ld	a, ' ';
+		call	T6963_FILL
 ;
 ;   WRITE Graphics BLANK CODE 
 ; 
@@ -997,9 +1004,9 @@ DJRM2:
 ;
 TXBUF:
 ;               debuf text used for testing - not needed
-;		.DB	"The quick brown fox jumps over the lazy_dog."
+		.DB	"The quick brown fox jumps over the lazy_dog."
 ;		.DB	"Now is the time for all good me to come to the aid of the party." 
 ;               buffer memory for scrolling - todo, could be stack space?
-		.DS	64
+;		.DS	64
 ;		.END
 
