@@ -6007,7 +6007,7 @@ SIZ_GDC	.EQU	$ - ORG_GDC
 #ENDIF
 #IF (CLCDENABLE)
 ORG_CLCD	.EQU	$
-  #INCLUDE "t6963.asm"
+;  #INCLUDE "t6963.asm"
   #INCLUDE "clcd.asm"
 SIZ_CLCD	.EQU	$ - ORG_CLCD
 		.ECHO	"CLCD occupies "

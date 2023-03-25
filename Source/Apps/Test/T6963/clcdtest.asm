@@ -1,9 +1,8 @@
-;STACK 		.EQU 9FFFH 		; STACK POINTER BASE ADDRESS 
-; 
-
+; CLCDTEST
+#define CLCDTEST 1
 
                 .ORG 0100H 
-                call T6963_INIT
+;                call T6963_INIT
 ;-----------------------------------------------------------------------------
 ;
 ; read test buffer
@@ -59,7 +58,7 @@
 ;   WRITE EXTERNAL CHARACTER GENERATOR DATA 
 ; 
 		LD DE, TEST_CG  		; CG data address in Program 
-		LD HL, _CG_STARTADDRESS + 500H  		; CG RAM Start Address (1c00H) 
+		LD HL, _CG_STARTADDRESS + 400H  		; CG RAM Start Address (1c00H) 
 		CALL DT2 
 		LD A, ADPSET 
 		CALL CMD 
@@ -341,9 +340,9 @@ TXPRT:
 		.DB	28H, 00H, 29H, 00H, 22H, 00H, 21H
 
 EXPRT1:
-		.DB	0A0H, 0A1H, 00H, 00H, 0A4H, 0A5H		; EXTERNAL CG CODE (semi graphic)
+		.DB	080H, 081H, 00H, 00H, 084H, 085H		; EXTERNAL CG CODE (semi graphic)
 EXPRT2:
-		.DB	0A2H, 0A3H, 00H, 00H, 0A6H, 0A7H
+		.DB	082H, 083H, 00H, 00H, 086H, 087H
 ;        
 ; TOSHIBA glyphs
 ;
@@ -371,18 +370,7 @@ TEST_CG
 
 ; lower/right CHARACTER CODE 87H
 		.DB	18H, 30H, 60H, 0C0H, 00H, 00H, 0E0H, 3FH
-
-
-;
-;==================================================================================================
-;   CLCD DRIVER - DATA
-;==================================================================================================
-;
-CLCD_ATTR	.DB	0	; CURRENT ATTRIBUTES
-CLCD_COLOR	.DB	0	; CURRENT COLOR
-CLCD_POS		.DW 	0	; CURRENT DISPLAY POSITION
-#include "../../../HBIOS/t6963.asm"
         
+#include "../../../HBIOS/clcd.asm"
+
                 .END
-                
-               
